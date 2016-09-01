@@ -1,0 +1,42 @@
+
+
+initialize_logdir(){
+echo "Initialize logdir..."
+mkdir -p ${LOG_DIR}/supervisor 
+chmod -R 0755 ${LOG_DIR}/supervisor
+chown -R root: ${LOG_DIR}/supervisor
+
+
+}
+
+generate_ssh_key(){
+echo -n "${1^^} "
+ssh-keygen -qt ${1} -N '' -f ${2}
+
+}
+
+generate_ssh_host_keys(){
+ if [[ ! -e /etc/ssh/ssh_host_rsa_key ]];then
+    echo -n "Generating OpenSSH host keys..."
+    generate_ssh_key rsa1 /etc/ssh/ssh_host_key
+    generate_ssh_key rsa /etc/ssh/ssh_host_rsa_key
+    generate_ssh_key dsa /etc/ssh/ssh_host_dsa_key
+    generate_ssh_key ecdsa /etc/ssh/ssh_host_ecdsa_key
+    generate_ssh_key ed25519 /etc/ssh/ssh_host_ed25519_key
+    echo 
+   fi
+   chmod 0600 /etc/ssh/*_key
+   chmod 0644 /etc/ssh/*.pub
+
+
+
+}
+
+
+initialize_system(){
+ initialize_logdir
+ generate_ssh_host_keys
+ rm -rf /var/run/supervisor.sock
+
+
+}
