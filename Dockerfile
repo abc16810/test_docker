@@ -20,6 +20,7 @@ EXPOSE 22
 
 ENV RUNTIME_DIR /etc
 ENV LOG_DIR /var/log
+
 RUN sed -i 's/UseDNS yes/UseDNS no/' /etc/ssh/sshd_config 
 ENTRYPOINT ["/sbin/wsm.sh"]
 
